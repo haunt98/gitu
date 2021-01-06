@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -16,7 +15,6 @@ import (
 const (
 	appName = "gitu"
 
-	debugFlag    = "debug"
 	nameFlag     = "name"
 	emailFlag    = "email"
 	nicknameFlag = "nickname"
@@ -81,13 +79,6 @@ func main() {
 				Action:  a.RunList,
 			},
 		},
-		Flags: []cli.Flag{
-			&cli.BoolFlag{
-				Name:    debugFlag,
-				Aliases: []string{"d"},
-				Usage:   "show debugging info",
-			},
-		},
 		Action: a.Run,
 	}
 
@@ -100,7 +91,6 @@ func main() {
 }
 
 type action struct {
-	debug bool
 	flags map[string]string
 }
 
@@ -241,15 +231,8 @@ func (a *action) RunList(c *cli.Context) error {
 }
 
 func (a *action) getFlags(c *cli.Context) {
-	a.debug = c.Bool(debugFlag)
 	a.flags[nameFlag] = c.String(nameFlag)
 	a.flags[emailFlag] = c.String(emailFlag)
-}
-
-func (a *action) logDebug(format string, v ...interface{}) {
-	if a.debug {
-		log.Printf(format, v...)
-	}
 }
 
 func readStdin() string {
