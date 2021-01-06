@@ -24,6 +24,7 @@ const (
 	addCommand    = "add"
 	switchCommand = "switch"
 	statusCommand = "status"
+	listCommand   = "list"
 )
 
 func main() {
@@ -72,6 +73,12 @@ func main() {
 				Aliases: []string{"st"},
 				Usage:   "show current name and email",
 				Action:  a.RunStatus,
+			},
+			{
+				Name:    listCommand,
+				Aliases: []string{"l"},
+				Usage:   "list all saved name and email in",
+				Action:  a.RunList,
 			},
 		},
 		Flags: []cli.Flag{
@@ -212,6 +219,23 @@ func (a *action) RunStatus(c *cli.Context) error {
 
 	fmt.Printf("Name: %s\n", repoCfg.User.Name)
 	fmt.Printf("Email: %s\n", repoCfg.User.Email)
+
+	return nil
+}
+
+func (a *action) RunList(c *cli.Context) error {
+	cfg, err := LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	users := cfg.GetAll()
+	for nickname, user := range users {
+		fmt.Printf("Nickname: %s\n", nickname)
+		fmt.Printf("Name: %s\n", user.Name)
+		fmt.Printf("Email: %s\n", user.Email)
+		fmt.Println()
+	}
 
 	return nil
 }

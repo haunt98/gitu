@@ -96,6 +96,10 @@ func (c *Config) Get(nickname string) (User, bool) {
 	return user, true
 }
 
+func (c *Config) GetAll() map[string]User {
+	return c.Users
+}
+
 func (c *Config) Update(nickname string, user User) {
 	c.Users[nickname] = user
 }
