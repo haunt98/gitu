@@ -107,7 +107,7 @@ func (a *action) RunAdd(c *cli.Context) error {
 	}
 
 	if cfg.CheckExist(a.flags[nicknameFlag]) {
-		fmt.Printf("Nickname %s already exist, replace it with new user (y/n)?\n", a.flags[nicknameFlag])
+		fmt.Printf("Nickname %s already exist, replace it with new user (y/n)? ", a.flags[nicknameFlag])
 		answer := readStdin()
 		if !strings.EqualFold(answer, "y") {
 			fmt.Println("Nothing changed :D")
