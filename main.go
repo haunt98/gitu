@@ -18,11 +18,13 @@ const (
 	nameFlag     = "name"
 	emailFlag    = "email"
 	nicknameFlag = "nickname"
+	allFlag      = "all"
 
 	addCommand    = "add"
 	switchCommand = "switch"
 	statusCommand = "status"
 	listCommand   = "list"
+	deleteCommand = "delete"
 )
 
 func main() {
@@ -77,6 +79,23 @@ func main() {
 				Aliases: []string{"l"},
 				Usage:   "list all saved name and email in",
 				Action:  a.RunList,
+			},
+			{
+				Name:    deleteCommand,
+				Aliases: []string{"d"},
+				Usage:   "delete saved name and email",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  nicknameFlag,
+						Usage: "nickname to delete",
+					},
+					&cli.BoolFlag{
+						Name:    allFlag,
+						Aliases: []string{"-a"},
+						Usage:   "delete all, be careful",
+					},
+				},
+				Action: a.RunDelete,
 			},
 		},
 		Action: a.Run,
@@ -227,6 +246,10 @@ func (a *action) RunList(c *cli.Context) error {
 		fmt.Println()
 	}
 
+	return nil
+}
+
+func (a *action) RunDelete(c *cli.Context) error {
 	return nil
 }
 
