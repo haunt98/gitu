@@ -30,7 +30,7 @@ type User struct {
 
 // LoadConfig config from file, return empty if file not found
 func LoadConfig() (Config, error) {
-	path := getConfigPath()
+	path := getConfigFilePath()
 	f, err := os.Open(path)
 	if err != nil {
 		// https://github.com/golang/go/blob/3e1e13ce6d1271f49f3d8ee359689145a6995bad/src/os/error.go#L90-L91
@@ -63,14 +63,20 @@ func LoadConfig() (Config, error) {
 
 // SaveConfig config to file
 func SaveConfig(c *Config) error {
+	// Make sure dir is exist
+	dirPath := getConfigDirPath()
+	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+		return fmt.Errorf("failed to mkdir %s: %w", dirPath, err)
+	}
+
 	bytes, err := json.MarshalIndent(c, "", indent)
 	if err != nil {
 		return fmt.Errorf("failed to marshall: %w", err)
 	}
 
-	path := getConfigPath()
-	if err := ioutil.WriteFile(path, bytes, 0644); err != nil {
-		return fmt.Errorf("failed to write %s: %w", path, err)
+	filePath := getConfigFilePath()
+	if err := ioutil.WriteFile(filePath, bytes, os.ModePerm); err != nil {
+		return fmt.Errorf("failed to write file: %s: %w", filePath, err)
 	}
 
 	return nil
@@ -89,6 +95,10 @@ func (c *Config) Delete(nickname string) {
 	delete(c.Users, nickname)
 }
 
-func getConfigPath() string {
+func getConfigFilePath() string {
 	return filepath.Join(xdg.GetConfigHome(), appName, configFile)
+}
+
+func getConfigDirPath() string {
+	return filepath.Join(xdg.GetConfigHome(), appName)
 }
