@@ -2,12 +2,14 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/go-git/go-git/v5"
 	"github.com/urfave/cli/v2"
 )
 
@@ -147,6 +149,39 @@ func (a *action) RunSwitch(c *cli.Context) error {
 		fmt.Println("Which nickname you choose?")
 		a.flags[nicknameFlag] = readStdin()
 		fmt.Printf("Switching to nickname %s...\n", a.flags[nicknameFlag])
+	}
+
+	cfg, err := LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	user, ok := cfg.Get(a.flags[nicknameFlag])
+	if !ok {
+		fmt.Printf("Nickname %s is not exist :(\n", a.flags[nicknameFlag])
+		return nil
+	}
+
+	repo, err := git.PlainOpen(".")
+	if err != nil {
+		if errors.Is(err, git.ErrRepositoryNotExists) {
+			fmt.Println("This is not git repository mate :(")
+			return nil
+		}
+
+		return fmt.Errorf("failed to open repository: %w", err)
+	}
+
+	repoCfg, err := repo.Config()
+	if err != nil {
+		return fmt.Errorf("failed to get repository config: %w", err)
+	}
+
+	// Update name and email
+	repoCfg.Author.Name = user.Name
+	repoCfg.Author.Email = user.Email
+	if err := repo.SetConfig(repoCfg); err != nil {
+		return fmt.Errorf("failed to set repository config: %w", err)
 	}
 
 	return nil

@@ -87,6 +87,15 @@ func (c *Config) CheckExist(nickname string) bool {
 	return ok
 }
 
+func (c *Config) Get(nickname string) (User, bool) {
+	user, ok := c.Users[nickname]
+	if !ok {
+		return User{}, false
+	}
+
+	return user, true
+}
+
 func (c *Config) Update(nickname string, user User) {
 	c.Users[nickname] = user
 }
