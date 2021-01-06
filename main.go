@@ -23,6 +23,7 @@ const (
 
 	addCommand    = "add"
 	switchCommand = "switch"
+	statusCommand = "status"
 )
 
 func main() {
@@ -65,6 +66,12 @@ func main() {
 					},
 				},
 				Action: a.RunSwitch,
+			},
+			{
+				Name:    statusCommand,
+				Aliases: []string{"st"},
+				Usage:   "show current name and email",
+				Action:  a.RunStatus,
 			},
 		},
 		Flags: []cli.Flag{
@@ -183,6 +190,28 @@ func (a *action) RunSwitch(c *cli.Context) error {
 	if err := repo.SetConfig(repoCfg); err != nil {
 		return fmt.Errorf("failed to set repository config: %w", err)
 	}
+
+	return nil
+}
+
+func (a *action) RunStatus(c *cli.Context) error {
+	repo, err := git.PlainOpen(".")
+	if err != nil {
+		if errors.Is(err, git.ErrRepositoryNotExists) {
+			fmt.Println("This is not git repository mate :(")
+			return nil
+		}
+
+		return fmt.Errorf("failed to open repository: %w", err)
+	}
+
+	repoCfg, err := repo.Config()
+	if err != nil {
+		return fmt.Errorf("failed to get repository config: %w", err)
+	}
+
+	fmt.Printf("Name: %s\n", repoCfg.User.Name)
+	fmt.Printf("Email: %s\n", repoCfg.User.Email)
 
 	return nil
 }
