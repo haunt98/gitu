@@ -14,9 +14,10 @@ import (
 const (
 	name = "gitu"
 
-	debugFlag = "debug"
-	nameFlag  = "name"
-	emailFlag = "email"
+	debugFlag    = "debug"
+	nameFlag     = "name"
+	emailFlag    = "email"
+	nicknameFlag = "nickname"
 
 	addCommand = "add"
 )
@@ -42,6 +43,10 @@ func main() {
 					&cli.StringFlag{
 						Name:  emailFlag,
 						Usage: "gitconfig user.email",
+					},
+					&cli.StringFlag{
+						Name:  nicknameFlag,
+						Usage: "nickname for quick access",
 					},
 				},
 				Action: a.RunAdd,
@@ -88,6 +93,12 @@ func (a *action) RunAdd(c *cli.Context) error {
 		fmt.Println("What is your email?")
 		a.flags[emailFlag] = readStdin()
 		fmt.Printf("Copy that %s\n", a.flags[emailFlag])
+	}
+
+	if a.flags[nicknameFlag] == "" {
+		fmt.Println("What should I call you?")
+		a.flags[nicknameFlag] = readStdin()
+		fmt.Printf("Nice nickname %s\n", a.flags[nicknameFlag])
 	}
 
 	return nil
