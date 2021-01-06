@@ -15,6 +15,8 @@ import (
 
 const (
 	configFile = "config.json"
+
+	indent = "  "
 )
 
 type Config struct {
@@ -59,7 +61,19 @@ func Load() (Config, error) {
 	return result, nil
 }
 
-func Save(c *Config) {
+// Save config to file
+func Save(c *Config) error {
+	bytes, err := json.MarshalIndent(c, "", indent)
+	if err != nil {
+		return fmt.Errorf("failed to marshall: %w", err)
+	}
+
+	path := getPath()
+	if err := ioutil.WriteFile(path, bytes, 0644); err != nil {
+		return fmt.Errorf("failed to write %s: %w", path, err)
+	}
+
+	return nil
 }
 
 func (c *Config) CheckExist(nickname string) bool {
