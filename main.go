@@ -185,8 +185,8 @@ func (a *action) RunSwitch(c *cli.Context) error {
 	}
 
 	// Update name and email
-	repoCfg.Author.Name = user.Name
-	repoCfg.Author.Email = user.Email
+	repoCfg.User.Name = user.Name
+	repoCfg.User.Email = user.Email
 	if err := repo.SetConfig(repoCfg); err != nil {
 		return fmt.Errorf("failed to set repository config: %w", err)
 	}
