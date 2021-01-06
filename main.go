@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	name = "gitu"
+	appName = "gitu"
 
 	debugFlag    = "debug"
 	nameFlag     = "name"
@@ -28,7 +28,7 @@ func main() {
 	}
 
 	app := &cli.App{
-		Name:  name,
+		Name:  appName,
 		Usage: "switch git user",
 		Commands: []*cli.Command{
 			{
@@ -65,7 +65,7 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		// Highlight error
 		fmtErr := color.New(color.FgRed)
-		fmtErr.Printf("[%s error]: ", name)
+		fmtErr.Printf("[%s error]: ", appName)
 		fmt.Printf("%s\n", err.Error())
 	}
 }
@@ -101,6 +101,29 @@ func (a *action) RunAdd(c *cli.Context) error {
 		fmt.Printf("Nice nickname %s\n", a.flags[nicknameFlag])
 	}
 
+	cfg, err := LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	if cfg.CheckExist(a.flags[nicknameFlag]) {
+		fmt.Printf("Nickname %s already exist, replace it with new user (y/n)?\n", a.flags[nicknameFlag])
+		answer := readStdin()
+		if !strings.EqualFold(answer, "y") {
+			fmt.Println("Nothing changed :D")
+			return nil
+		}
+	}
+
+	cfg.Update(a.flags[nicknameFlag], User{
+		Name:  a.flags[nameFlag],
+		Email: a.flags[emailFlag],
+	})
+
+	if err := SaveConfig(&cfg); err != nil {
+		return fmt.Errorf("failed to save config: %w", err)
+	}
+
 	return nil
 }
 
@@ -126,7 +149,6 @@ func readStdin() string {
 		}
 
 		return line
-		break
 	}
 
 	return ""

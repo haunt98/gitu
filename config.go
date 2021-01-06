@@ -28,9 +28,9 @@ type User struct {
 	Email string `json:"email"`
 }
 
-// Load config from file, return empty if file not found
-func Load() (Config, error) {
-	path := getPath()
+// LoadConfig config from file, return empty if file not found
+func LoadConfig() (Config, error) {
+	path := getConfigPath()
 	f, err := os.Open(path)
 	if err != nil {
 		// https://github.com/golang/go/blob/3e1e13ce6d1271f49f3d8ee359689145a6995bad/src/os/error.go#L90-L91
@@ -61,14 +61,14 @@ func Load() (Config, error) {
 	return result, nil
 }
 
-// Save config to file
-func Save(c *Config) error {
+// SaveConfig config to file
+func SaveConfig(c *Config) error {
 	bytes, err := json.MarshalIndent(c, "", indent)
 	if err != nil {
 		return fmt.Errorf("failed to marshall: %w", err)
 	}
 
-	path := getPath()
+	path := getConfigPath()
 	if err := ioutil.WriteFile(path, bytes, 0644); err != nil {
 		return fmt.Errorf("failed to write %s: %w", path, err)
 	}
@@ -89,6 +89,6 @@ func (c *Config) Delete(nickname string) {
 	delete(c.Users, nickname)
 }
 
-func getPath() string {
-	return filepath.Join(xdg.GetConfigHome(), name, configFile)
+func getConfigPath() string {
+	return filepath.Join(xdg.GetConfigHome(), appName, configFile)
 }
