@@ -1,0 +1,3 @@
+# gitu
+
+Switch git user.
