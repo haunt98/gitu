@@ -19,7 +19,8 @@ const (
 	emailFlag    = "email"
 	nicknameFlag = "nickname"
 
-	addCommand = "add"
+	addCommand    = "add"
+	switchCommand = "switch"
 )
 
 func main() {
@@ -50,6 +51,18 @@ func main() {
 					},
 				},
 				Action: a.RunAdd,
+			},
+			{
+				Name:    switchCommand,
+				Aliases: []string{"sw"},
+				Usage:   "switch git user",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  nicknameFlag,
+						Usage: "nickname to switch",
+					},
+				},
+				Action: a.RunSwitch,
 			},
 		},
 		Flags: []cli.Flag{
@@ -122,6 +135,18 @@ func (a *action) RunAdd(c *cli.Context) error {
 
 	if err := SaveConfig(&cfg); err != nil {
 		return fmt.Errorf("failed to save config: %w", err)
+	}
+
+	return nil
+}
+
+func (a *action) RunSwitch(c *cli.Context) error {
+	a.getFlags(c)
+
+	if a.flags[nicknameFlag] == "" {
+		fmt.Println("Which nickname you choose?")
+		a.flags[nicknameFlag] = readStdin()
+		fmt.Printf("Switching to nickname %s...\n", a.flags[nicknameFlag])
 	}
 
 	return nil
