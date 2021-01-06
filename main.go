@@ -6,19 +6,28 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 const (
 	name = "gitu"
+
+	debugFlag = "debug"
 )
 
 func main() {
 	a := &action{}
 
 	app := &cli.App{
-		Name:   name,
-		Usage:  "switch git user",
+		Name:  name,
+		Usage: "switch git user",
+		Flags: []cli.Flag{
+			&cli.BoolFlag{
+				Name:    debugFlag,
+				Aliases: []string{"d"},
+				Usage:   "show debugging info",
+			},
+		},
 		Action: a.Run,
 	}
 
@@ -41,6 +50,10 @@ func (a *action) Run(c *cli.Context) error {
 	}
 
 	return nil
+}
+
+func (a *action) getFlags(c *cli.Context) {
+	a.debug = c.Bool(debugFlag)
 }
 
 func (a *action) logDebug(format string, v ...interface{}) {
