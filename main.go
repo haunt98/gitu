@@ -233,6 +233,7 @@ func (a *action) RunList(c *cli.Context) error {
 func (a *action) getFlags(c *cli.Context) {
 	a.flags[nameFlag] = c.String(nameFlag)
 	a.flags[emailFlag] = c.String(emailFlag)
+	a.flags[nicknameFlag] = c.String(nicknameFlag)
 }
 
 func readStdin() string {
