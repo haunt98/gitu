@@ -108,6 +108,10 @@ func (c *Config) Delete(nickname string) {
 	delete(c.Users, nickname)
 }
 
+func (c *Config) DeleteAll() {
+	c.Users = make(map[string]User)
+}
+
 func getConfigFilePath() string {
 	return filepath.Join(xdg.GetConfigHome(), appName, configFile)
 }
