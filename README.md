@@ -1,5 +1,8 @@
 # gitu
 
+[![Go](https://github.com/haunt98/gitu/workflows/Go/badge.svg?branch=main)](https://github.com/actions/setup-go)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/haunt98/gitu)](https://pkg.go.dev/github.com/haunt98/gitu)
+
 Switch git user fastly.
 
 ## Install
