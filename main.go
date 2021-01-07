@@ -174,7 +174,7 @@ func (a *action) RunSwitch(c *cli.Context) error {
 	if a.flags.nickname == "" {
 		fmt.Println("Which nickname you choose?")
 		a.flags.nickname = readStdin()
-		fmt.Printf("Switching to nickname %s...\n", a.flags.nickname)
+		fmt.Printf("Switching to nickname %s\n", a.flags.nickname)
 	}
 
 	cfg, err := LoadConfig()
