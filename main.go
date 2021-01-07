@@ -253,6 +253,39 @@ func (a *action) RunList(c *cli.Context) error {
 }
 
 func (a *action) RunDelete(c *cli.Context) error {
+	a.getFlags(c)
+
+	cfg, err := LoadConfig()
+	if err != nil {
+		return fmt.Errorf("failed to load config: %w", err)
+	}
+
+	if a.flags.all {
+		fmt.Print("Do you sure you want to wipe out all saved user (y/n) ")
+		answer := readStdin()
+		if strings.EqualFold(answer, "y") {
+			cfg.DeleteAll()
+			fmt.Println("Eveything is deleted")
+
+			if err := SaveConfig(&cfg); err != nil {
+				return fmt.Errorf("failed to save config: %w", err)
+			}
+
+			return nil
+		}
+	}
+
+	if a.flags.nickname == "" {
+		fmt.Println("Which nickname you want to delete?")
+		a.flags.nickname = readStdin()
+		fmt.Printf("Deleting nickname %s\n", a.flags.nickname)
+	}
+
+	cfg.Delete(a.flags.nickname)
+	if err := SaveConfig(&cfg); err != nil {
+		return fmt.Errorf("failed to save config: %w", err)
+	}
+
 	return nil
 }
 
