@@ -39,3 +39,9 @@ Delete saved git user:
 ```sh
 gitu delete
 ```
+
+## Thanks
+
+- [fatih/color](https://github.com/fatih/color)
+- [go-git/go-git](https://github.com/go-git/go-git/)
+- [urfave/cli](https://github.com/urfave/cli)
