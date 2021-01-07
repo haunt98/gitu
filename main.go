@@ -28,9 +28,7 @@ const (
 )
 
 func main() {
-	a := &action{
-		flags: make(map[string]string),
-	}
+	a := &action{}
 
 	app := &cli.App{
 		Name:  appName,
@@ -110,7 +108,12 @@ func main() {
 }
 
 type action struct {
-	flags map[string]string
+	flags struct {
+		name     string
+		email    string
+		nickname string
+		all      bool
+	}
 }
 
 // Show help by default
@@ -121,22 +124,22 @@ func (a *action) Run(c *cli.Context) error {
 func (a *action) RunAdd(c *cli.Context) error {
 	a.getFlags(c)
 
-	if a.flags[nameFlag] == "" {
+	if a.flags.name == "" {
 		fmt.Println("What is your name?")
-		a.flags[nameFlag] = readStdin()
-		fmt.Printf("Hello %s\n", a.flags[nameFlag])
+		a.flags.name = readStdin()
+		fmt.Printf("Hello %s\n", a.flags.name)
 	}
 
-	if a.flags[emailFlag] == "" {
+	if a.flags.email == "" {
 		fmt.Println("What is your email?")
-		a.flags[emailFlag] = readStdin()
-		fmt.Printf("Copy that %s\n", a.flags[emailFlag])
+		a.flags.email = readStdin()
+		fmt.Printf("Copy that %s\n", a.flags.email)
 	}
 
-	if a.flags[nicknameFlag] == "" {
+	if a.flags.nickname == "" {
 		fmt.Println("What should I call you?")
-		a.flags[nicknameFlag] = readStdin()
-		fmt.Printf("Nice nickname %s\n", a.flags[nicknameFlag])
+		a.flags.nickname = readStdin()
+		fmt.Printf("Nice nickname %s\n", a.flags.nickname)
 	}
 
 	cfg, err := LoadConfig()
@@ -144,8 +147,8 @@ func (a *action) RunAdd(c *cli.Context) error {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	if cfg.CheckExist(a.flags[nicknameFlag]) {
-		fmt.Printf("Nickname %s already exist, replace it with new user (y/n)? ", a.flags[nicknameFlag])
+	if cfg.CheckExist(a.flags.nickname) {
+		fmt.Printf("Nickname %s already exist, replace it with new user (y/n)? ", a.flags.nickname)
 		answer := readStdin()
 		if !strings.EqualFold(answer, "y") {
 			fmt.Println("Nothing changed :D")
@@ -153,9 +156,9 @@ func (a *action) RunAdd(c *cli.Context) error {
 		}
 	}
 
-	cfg.Update(a.flags[nicknameFlag], User{
-		Name:  a.flags[nameFlag],
-		Email: a.flags[emailFlag],
+	cfg.Update(a.flags.nickname, User{
+		Name:  a.flags.name,
+		Email: a.flags.email,
 	})
 
 	if err := SaveConfig(&cfg); err != nil {
@@ -168,10 +171,10 @@ func (a *action) RunAdd(c *cli.Context) error {
 func (a *action) RunSwitch(c *cli.Context) error {
 	a.getFlags(c)
 
-	if a.flags[nicknameFlag] == "" {
+	if a.flags.nickname == "" {
 		fmt.Println("Which nickname you choose?")
-		a.flags[nicknameFlag] = readStdin()
-		fmt.Printf("Switching to nickname %s...\n", a.flags[nicknameFlag])
+		a.flags.nickname = readStdin()
+		fmt.Printf("Switching to nickname %s...\n", a.flags.nickname)
 	}
 
 	cfg, err := LoadConfig()
@@ -179,9 +182,9 @@ func (a *action) RunSwitch(c *cli.Context) error {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	user, ok := cfg.Get(a.flags[nicknameFlag])
+	user, ok := cfg.Get(a.flags.nickname)
 	if !ok {
-		fmt.Printf("Nickname %s is not exist :(\n", a.flags[nicknameFlag])
+		fmt.Printf("Nickname %s is not exist :(\n", a.flags.nickname)
 		return nil
 	}
 
@@ -254,9 +257,10 @@ func (a *action) RunDelete(c *cli.Context) error {
 }
 
 func (a *action) getFlags(c *cli.Context) {
-	a.flags[nameFlag] = c.String(nameFlag)
-	a.flags[emailFlag] = c.String(emailFlag)
-	a.flags[nicknameFlag] = c.String(nicknameFlag)
+	a.flags.name = c.String(nameFlag)
+	a.flags.email = c.String(emailFlag)
+	a.flags.nickname = c.String(nicknameFlag)
+	a.flags.all = c.Bool(allFlag)
 }
 
 func readStdin() string {
