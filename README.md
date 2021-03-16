@@ -7,6 +7,14 @@ Switch git user fastly.
 
 ## Install
 
+With Go version `>= 1.16`:
+
+```sh
+go install github.com/haunt98/gitu@latest
+```
+
+With Go version `< 1.16`:
+
 ```sh
 GO111MODULES=on go get -u github.com/haunt98/gitu
 ```
