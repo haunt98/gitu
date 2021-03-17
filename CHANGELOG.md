@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v0.2.0 (2021-3-17)
+
+### Added
+
+- feat: deprecated ioutil
+
+### Others
+
+- build: bump go 1.16 in go.mod
+
+- chore: bump go 1.16 in github action
+
+- build: update go.mod
+
+- chore(readme): add go 1.16 instal guide
+
+- build: update go.mod
+
+- chore(changelog): generate v0.1.0
+
 ## v0.1.0 (2021-1-7)
 
 ### Added
