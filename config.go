@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -44,7 +44,7 @@ func LoadConfig() (Config, error) {
 	}
 	defer f.Close()
 
-	bytes, err := ioutil.ReadAll(f)
+	bytes, err := io.ReadAll(f)
 	if err != nil {
 		return Config{}, fmt.Errorf("failed to read %s: %w", path, err)
 	}
@@ -75,7 +75,7 @@ func SaveConfig(c *Config) error {
 	}
 
 	filePath := getConfigFilePath()
-	if err := ioutil.WriteFile(filePath, bytes, os.ModePerm); err != nil {
+	if err := os.WriteFile(filePath, bytes, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to write file: %s: %w", filePath, err)
 	}
 
