@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/go-git/go-git/v5"
+	"github.com/haunt98/color"
 	"github.com/urfave/cli/v2"
 )
 
@@ -100,10 +100,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		// Highlight error
-		fmtErr := color.New(color.FgRed)
-		fmtErr.Printf("[%s error]: ", appName)
-		fmt.Printf("%s\n", err.Error())
+		color.PrintAppError(appName, err.Error())
 	}
 }
 

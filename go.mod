@@ -5,8 +5,8 @@ go 1.16
 require (
 	github.com/Microsoft/go-winio v0.4.16 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
-	github.com/fatih/color v1.10.0
 	github.com/go-git/go-git/v5 v5.2.0
+	github.com/haunt98/color v0.1.0
 	github.com/haunt98/xdg v0.1.0
 	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect
