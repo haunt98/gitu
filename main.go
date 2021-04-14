@@ -27,6 +27,14 @@ const (
 	deleteCommand = "delete"
 )
 
+var (
+	addAliases    = []string{"a"}
+	switchAliases = []string{"sw"}
+	statusAliases = []string{"st"}
+	listAliases   = []string{"l"}
+	deleteAliases = []string{"d"}
+)
+
 func main() {
 	a := &action{}
 
@@ -36,7 +44,7 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:    addCommand,
-				Aliases: []string{"a"},
+				Aliases: addAliases,
 				Usage:   "add git user",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -56,7 +64,7 @@ func main() {
 			},
 			{
 				Name:    switchCommand,
-				Aliases: []string{"sw"},
+				Aliases: switchAliases,
 				Usage:   "switch git user",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -68,19 +76,19 @@ func main() {
 			},
 			{
 				Name:    statusCommand,
-				Aliases: []string{"st"},
+				Aliases: statusAliases,
 				Usage:   "show current name and email",
 				Action:  a.RunStatus,
 			},
 			{
 				Name:    listCommand,
-				Aliases: []string{"l"},
+				Aliases: listAliases,
 				Usage:   "list all saved name and email in",
 				Action:  a.RunList,
 			},
 			{
 				Name:    deleteCommand,
-				Aliases: []string{"d"},
+				Aliases: deleteAliases,
 				Usage:   "delete saved name and email",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
