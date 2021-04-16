@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"os"
@@ -9,6 +8,7 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/haunt98/color"
+	"github.com/haunt98/ioe-go"
 	"github.com/urfave/cli/v2"
 )
 
@@ -150,19 +150,19 @@ func (a *action) RunAdd(c *cli.Context) error {
 
 	if a.flags.name == "" {
 		fmt.Println("What is your name?")
-		a.flags.name = readStdin()
+		a.flags.name = ioe.ReadInput()
 		fmt.Printf("Hello %s\n", a.flags.name)
 	}
 
 	if a.flags.email == "" {
 		fmt.Println("What is your email?")
-		a.flags.email = readStdin()
+		a.flags.email = ioe.ReadInput()
 		fmt.Printf("Copy that %s\n", a.flags.email)
 	}
 
 	if a.flags.nickname == "" {
 		fmt.Println("What should I call you?")
-		a.flags.nickname = readStdin()
+		a.flags.nickname = ioe.ReadInput()
 		fmt.Printf("Nice nickname %s\n", a.flags.nickname)
 	}
 
@@ -173,7 +173,7 @@ func (a *action) RunAdd(c *cli.Context) error {
 
 	if cfg.CheckExist(a.flags.nickname) {
 		fmt.Printf("Nickname %s already exist, replace it with new user (y/n)? ", a.flags.nickname)
-		answer := readStdin()
+		answer := ioe.ReadInput()
 		if !strings.EqualFold(answer, "y") {
 			fmt.Println("Nothing changed :D")
 			return nil
@@ -197,7 +197,7 @@ func (a *action) RunSwitch(c *cli.Context) error {
 
 	if a.flags.nickname == "" {
 		fmt.Println("Which nickname you choose?")
-		a.flags.nickname = readStdin()
+		a.flags.nickname = ioe.ReadInput()
 		fmt.Printf("Switching to nickname %s\n", a.flags.nickname)
 	}
 
@@ -286,7 +286,7 @@ func (a *action) RunDelete(c *cli.Context) error {
 
 	if a.flags.all {
 		fmt.Print("Do you sure you want to wipe out all saved user (y/n) ")
-		answer := readStdin()
+		answer := ioe.ReadInput()
 		if strings.EqualFold(answer, "y") {
 			cfg.DeleteAll()
 			fmt.Println("Eveything is deleted")
@@ -301,7 +301,7 @@ func (a *action) RunDelete(c *cli.Context) error {
 
 	if a.flags.nickname == "" {
 		fmt.Println("Which nickname you want to delete?")
-		a.flags.nickname = readStdin()
+		a.flags.nickname = ioe.ReadInput()
 		fmt.Printf("Deleting nickname %s\n", a.flags.nickname)
 	}
 
@@ -318,19 +318,4 @@ func (a *action) getFlags(c *cli.Context) {
 	a.flags.email = c.String(emailFlag)
 	a.flags.nickname = c.String(nicknameFlag)
 	a.flags.all = c.Bool(allFlag)
-}
-
-func readStdin() string {
-	bs := bufio.NewScanner(os.Stdin)
-	for bs.Scan() {
-		line := bs.Text()
-		line = strings.TrimSpace(line)
-		if line == "" {
-			continue
-		}
-
-		return line
-	}
-
-	return ""
 }
