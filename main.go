@@ -37,7 +37,7 @@ const (
 	addUsage      = "add git user"
 	switchUsage   = "switch git user"
 	statusUsage   = "show current name and email"
-	listUsage     = "list all saved name and email in"
+	listUsage     = "list all saved names and emails"
 	deleteUsage   = "delete saved name and email"
 )
 
