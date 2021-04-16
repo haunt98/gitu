@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	appName = "gitu"
+	appName  = "gitu"
+	appUsage = "switch git user quickly"
 
 	// flags
 	nameFlag     = "name"
@@ -31,15 +32,17 @@ const (
 	// usages
 	nameUsage     = "gitconfig user.name"
 	emailUsage    = "gitconfig user.email"
-	nicknameUsage = "nickname for quick access"
-	allUsage      = ""
-	addUsage      = ""
-	switchUsage   = ""
-	listUsage     = ""
-	deleteUsage   = ""
+	nicknameUsage = "nickname to choose"
+	allUsage      = "select all nicknames"
+	addUsage      = "add git user"
+	switchUsage   = "switch git user"
+	statusUsage   = "show current name and email"
+	listUsage     = "list all saved name and email in"
+	deleteUsage   = "delete saved name and email"
 )
 
 var (
+	allAliases    = []string{"a"}
 	addAliases    = []string{"a"}
 	switchAliases = []string{"sw"}
 	statusAliases = []string{"st"}
@@ -52,12 +55,12 @@ func main() {
 
 	app := &cli.App{
 		Name:  appName,
-		Usage: "switch git user",
+		Usage: appUsage,
 		Commands: []*cli.Command{
 			{
 				Name:    addCommand,
 				Aliases: addAliases,
-				Usage:   "add git user",
+				Usage:   addUsage,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nameFlag,
@@ -77,7 +80,7 @@ func main() {
 			{
 				Name:    switchCommand,
 				Aliases: switchAliases,
-				Usage:   "switch git user",
+				Usage:   switchUsage,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nicknameFlag,
@@ -89,28 +92,28 @@ func main() {
 			{
 				Name:    statusCommand,
 				Aliases: statusAliases,
-				Usage:   "show current name and email",
+				Usage:   statusUsage,
 				Action:  a.RunStatus,
 			},
 			{
 				Name:    listCommand,
 				Aliases: listAliases,
-				Usage:   "list all saved name and email in",
+				Usage:   listUsage,
 				Action:  a.RunList,
 			},
 			{
 				Name:    deleteCommand,
 				Aliases: deleteAliases,
-				Usage:   "delete saved name and email",
+				Usage:   deleteUsage,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nicknameFlag,
-						Usage: "nickname to delete",
+						Usage: nicknameUsage,
 					},
 					&cli.BoolFlag{
 						Name:    allFlag,
-						Aliases: []string{"-a"},
-						Usage:   "delete all, be careful",
+						Aliases: allAliases,
+						Usage:   allUsage,
 					},
 				},
 				Action: a.RunDelete,
