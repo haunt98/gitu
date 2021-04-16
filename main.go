@@ -42,7 +42,10 @@ const (
 )
 
 var (
-	allAliases    = []string{"a"}
+	// flag aliases
+	allAliases = []string{"a"}
+
+	// command aliases
 	addAliases    = []string{"a"}
 	switchAliases = []string{"sw"}
 	statusAliases = []string{"st"}
