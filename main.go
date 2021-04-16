@@ -13,21 +13,41 @@ import (
 )
 
 const (
-	appName = "gitu"
+	appName  = "gitu"
+	appUsage = "switch git user quickly"
 
+	// flags
 	nameFlag     = "name"
 	emailFlag    = "email"
 	nicknameFlag = "nickname"
 	allFlag      = "all"
 
+	// commands
 	addCommand    = "add"
 	switchCommand = "switch"
 	statusCommand = "status"
 	listCommand   = "list"
 	deleteCommand = "delete"
+
+	// flag usage
+	nameUsage     = "gitconfig user.name"
+	emailUsage    = "gitconfig user.email"
+	nicknameUsage = "nickname to choose"
+	allUsage      = "select all nicknames"
+
+	// command usage
+	addUsage    = "add git user"
+	switchUsage = "switch git user"
+	statusUsage = "show current name and email"
+	listUsage   = "list all saved names and emails"
+	deleteUsage = "delete saved name and email"
 )
 
 var (
+	// flag aliases
+	allAliases = []string{"a"}
+
+	// command aliases
 	addAliases    = []string{"a"}
 	switchAliases = []string{"sw"}
 	statusAliases = []string{"st"}
@@ -40,24 +60,24 @@ func main() {
 
 	app := &cli.App{
 		Name:  appName,
-		Usage: "switch git user",
+		Usage: appUsage,
 		Commands: []*cli.Command{
 			{
 				Name:    addCommand,
 				Aliases: addAliases,
-				Usage:   "add git user",
+				Usage:   addUsage,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nameFlag,
-						Usage: "gitconfig user.name",
+						Usage: nameUsage,
 					},
 					&cli.StringFlag{
 						Name:  emailFlag,
-						Usage: "gitconfig user.email",
+						Usage: emailUsage,
 					},
 					&cli.StringFlag{
 						Name:  nicknameFlag,
-						Usage: "nickname for quick access",
+						Usage: nicknameUsage,
 					},
 				},
 				Action: a.RunAdd,
@@ -65,11 +85,11 @@ func main() {
 			{
 				Name:    switchCommand,
 				Aliases: switchAliases,
-				Usage:   "switch git user",
+				Usage:   switchUsage,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nicknameFlag,
-						Usage: "nickname to switch",
+						Usage: nicknameUsage,
 					},
 				},
 				Action: a.RunSwitch,
@@ -77,34 +97,34 @@ func main() {
 			{
 				Name:    statusCommand,
 				Aliases: statusAliases,
-				Usage:   "show current name and email",
+				Usage:   statusUsage,
 				Action:  a.RunStatus,
 			},
 			{
 				Name:    listCommand,
 				Aliases: listAliases,
-				Usage:   "list all saved name and email in",
+				Usage:   listUsage,
 				Action:  a.RunList,
 			},
 			{
 				Name:    deleteCommand,
 				Aliases: deleteAliases,
-				Usage:   "delete saved name and email",
+				Usage:   deleteUsage,
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nicknameFlag,
-						Usage: "nickname to delete",
+						Usage: nicknameUsage,
 					},
 					&cli.BoolFlag{
 						Name:    allFlag,
-						Aliases: []string{"-a"},
-						Usage:   "delete all, be careful",
+						Aliases: allAliases,
+						Usage:   allUsage,
 					},
 				},
 				Action: a.RunDelete,
 			},
 		},
-		Action: a.Run,
+		Action: a.RunHelp,
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -121,8 +141,7 @@ type action struct {
 	}
 }
 
-// Show help by default
-func (a *action) Run(c *cli.Context) error {
+func (a *action) RunHelp(c *cli.Context) error {
 	return cli.ShowAppHelp(c)
 }
 
