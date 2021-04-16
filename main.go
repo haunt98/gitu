@@ -15,16 +15,28 @@ import (
 const (
 	appName = "gitu"
 
+	// flags
 	nameFlag     = "name"
 	emailFlag    = "email"
 	nicknameFlag = "nickname"
 	allFlag      = "all"
 
+	// commands
 	addCommand    = "add"
 	switchCommand = "switch"
 	statusCommand = "status"
 	listCommand   = "list"
 	deleteCommand = "delete"
+
+	// usages
+	nameUsage     = "gitconfig user.name"
+	emailUsage    = "gitconfig user.email"
+	nicknameUsage = "nickname for quick access"
+	allUsage      = ""
+	addUsage      = ""
+	switchUsage   = ""
+	listUsage     = ""
+	deleteUsage   = ""
 )
 
 var (
@@ -49,15 +61,15 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nameFlag,
-						Usage: "gitconfig user.name",
+						Usage: nameUsage,
 					},
 					&cli.StringFlag{
 						Name:  emailFlag,
-						Usage: "gitconfig user.email",
+						Usage: emailUsage,
 					},
 					&cli.StringFlag{
 						Name:  nicknameFlag,
-						Usage: "nickname for quick access",
+						Usage: nicknameUsage,
 					},
 				},
 				Action: a.RunAdd,
@@ -69,7 +81,7 @@ func main() {
 				Flags: []cli.Flag{
 					&cli.StringFlag{
 						Name:  nicknameFlag,
-						Usage: "nickname to switch",
+						Usage: nicknameUsage,
 					},
 				},
 				Action: a.RunSwitch,
