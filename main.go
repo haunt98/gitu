@@ -29,16 +29,18 @@ const (
 	listCommand   = "list"
 	deleteCommand = "delete"
 
-	// usages
+	// flag usage
 	nameUsage     = "gitconfig user.name"
 	emailUsage    = "gitconfig user.email"
 	nicknameUsage = "nickname to choose"
 	allUsage      = "select all nicknames"
-	addUsage      = "add git user"
-	switchUsage   = "switch git user"
-	statusUsage   = "show current name and email"
-	listUsage     = "list all saved names and emails"
-	deleteUsage   = "delete saved name and email"
+
+	// command usage
+	addUsage    = "add git user"
+	switchUsage = "switch git user"
+	statusUsage = "show current name and email"
+	listUsage   = "list all saved names and emails"
+	deleteUsage = "delete saved name and email"
 )
 
 var (
@@ -122,7 +124,7 @@ func main() {
 				Action: a.RunDelete,
 			},
 		},
-		Action: a.Run,
+		Action: a.RunHelp,
 	}
 
 	if err := app.Run(os.Args); err != nil {
@@ -139,8 +141,7 @@ type action struct {
 	}
 }
 
-// Show help by default
-func (a *action) Run(c *cli.Context) error {
+func (a *action) RunHelp(c *cli.Context) error {
 	return cli.ShowAppHelp(c)
 }
 
