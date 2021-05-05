@@ -1,5 +1,39 @@
 # CHANGELOG
 
+## v0.3.0 (2021-05-05)
+
+### Added
+
+- feat: replace xdg with os (2021-05-05)
+
+- feat: use ioe.ReadInput to replace readStdin (#4) (2021-04-17)
+
+- feat: use my own color pkg to wrap fatih/color (#1) (2021-04-14)
+
+### Others
+
+- chore: fastly to match readme (2021-05-05)
+
+- docs: better wording for config (2021-05-05)
+
+- docs: update config location (2021-05-05)
+
+- refactor: move main to cmd (2021-05-05)
+
+- refactor: completely move cli to internal (2021-05-05)
+
+- refactor: move config to internal (2021-05-05)
+
+- build: update go.mod (2021-05-05)
+
+- refactor: move usage to const (#3) (2021-04-16)
+
+- refactor: move aliases to define var (#2) (2021-04-14)
+
+- chore: update go in github action (2021-04-14)
+
+- chore(changelog): generate v0.2.0 (2021-03-17)
+
 ## v0.2.0 (2021-3-17)
 
 ### Added
