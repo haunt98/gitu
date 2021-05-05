@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-git/go-git/v5"
 	"github.com/haunt98/color"
+	"github.com/haunt98/gitu/internal/config"
 	"github.com/haunt98/ioe-go"
 	"github.com/urfave/cli/v2"
 )
@@ -166,7 +167,7 @@ func (a *action) RunAdd(c *cli.Context) error {
 		fmt.Printf("Nice nickname %s\n", a.flags.nickname)
 	}
 
-	cfg, err := LoadConfig()
+	cfg, err := config.LoadConfig(appName)
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
@@ -180,12 +181,12 @@ func (a *action) RunAdd(c *cli.Context) error {
 		}
 	}
 
-	cfg.Update(a.flags.nickname, User{
+	cfg.Update(a.flags.nickname, config.User{
 		Name:  a.flags.name,
 		Email: a.flags.email,
 	})
 
-	if err := SaveConfig(&cfg); err != nil {
+	if err := config.SaveConfig(appName, &cfg); err != nil {
 		return fmt.Errorf("failed to save config: %w", err)
 	}
 
@@ -201,7 +202,7 @@ func (a *action) RunSwitch(c *cli.Context) error {
 		fmt.Printf("Switching to nickname %s\n", a.flags.nickname)
 	}
 
-	cfg, err := LoadConfig()
+	cfg, err := config.LoadConfig(appName)
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
@@ -260,7 +261,7 @@ func (a *action) RunStatus(c *cli.Context) error {
 }
 
 func (a *action) RunList(c *cli.Context) error {
-	cfg, err := LoadConfig()
+	cfg, err := config.LoadConfig(appName)
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
@@ -279,7 +280,7 @@ func (a *action) RunList(c *cli.Context) error {
 func (a *action) RunDelete(c *cli.Context) error {
 	a.getFlags(c)
 
-	cfg, err := LoadConfig()
+	cfg, err := config.LoadConfig(appName)
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
@@ -291,7 +292,7 @@ func (a *action) RunDelete(c *cli.Context) error {
 			cfg.DeleteAll()
 			fmt.Println("Eveything is deleted")
 
-			if err := SaveConfig(&cfg); err != nil {
+			if err := config.SaveConfig(appName, &cfg); err != nil {
 				return fmt.Errorf("failed to save config: %w", err)
 			}
 
@@ -306,7 +307,7 @@ func (a *action) RunDelete(c *cli.Context) error {
 	}
 
 	cfg.Delete(a.flags.nickname)
-	if err := SaveConfig(&cfg); err != nil {
+	if err := config.SaveConfig(appName, &cfg); err != nil {
 		return fmt.Errorf("failed to save config: %w", err)
 	}
 

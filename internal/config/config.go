@@ -1,6 +1,6 @@
 // Config stores at $XDG_CONFIG_HOME/gitu/config.json
 
-package main
+package config
 
 import (
 	"encoding/json"
@@ -29,8 +29,8 @@ type User struct {
 }
 
 // LoadConfig config from file, return empty if file not found
-func LoadConfig() (Config, error) {
-	path := getConfigFilePath()
+func LoadConfig(appName string) (Config, error) {
+	path := getConfigFilePath(appName)
 	f, err := os.Open(path)
 	if err != nil {
 		// https://github.com/golang/go/blob/3e1e13ce6d1271f49f3d8ee359689145a6995bad/src/os/error.go#L90-L91
@@ -62,9 +62,9 @@ func LoadConfig() (Config, error) {
 }
 
 // SaveConfig config to file
-func SaveConfig(c *Config) error {
+func SaveConfig(appName string, c *Config) error {
 	// Make sure dir is exist
-	dirPath := getConfigDirPath()
+	dirPath := getConfigDirPath(appName)
 	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to mkdir %s: %w", dirPath, err)
 	}
@@ -74,7 +74,7 @@ func SaveConfig(c *Config) error {
 		return fmt.Errorf("failed to marshall: %w", err)
 	}
 
-	filePath := getConfigFilePath()
+	filePath := getConfigFilePath(appName)
 	if err := os.WriteFile(filePath, bytes, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to write file: %s: %w", filePath, err)
 	}
@@ -112,10 +112,10 @@ func (c *Config) DeleteAll() {
 	c.Users = make(map[string]User)
 }
 
-func getConfigFilePath() string {
+func getConfigFilePath(appName string) string {
 	return filepath.Join(xdg.GetConfigHome(), appName, configFile)
 }
 
-func getConfigDirPath() string {
+func getConfigDirPath(appName string) string {
 	return filepath.Join(xdg.GetConfigHome(), appName)
 }
