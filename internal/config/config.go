@@ -28,7 +28,7 @@ type User struct {
 	Email string `json:"email"`
 }
 
-// LoadConfig config from file, return empty if file not found
+// LoadConfig from file, init empty config if file not found
 func LoadConfig(appName string) (Config, error) {
 	_, filePath, err := getConfigPath(appName)
 	if err != nil {
@@ -65,7 +65,7 @@ func LoadConfig(appName string) (Config, error) {
 	return result, nil
 }
 
-// SaveConfig config to file
+// SaveConfig to file
 func SaveConfig(appName string, c *Config) error {
 	dirPath, filePath, err := getConfigPath(appName)
 	if err != nil {
