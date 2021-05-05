@@ -9,7 +9,7 @@ import (
 
 const (
 	appName  = "gitu"
-	appUsage = "switch git user quickly"
+	appUsage = "switch git user fastly"
 
 	// flags
 	nameFlag     = "name"
