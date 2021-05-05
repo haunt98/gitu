@@ -9,7 +9,6 @@ require (
 	github.com/go-git/go-git/v5 v5.3.0
 	github.com/haunt98/color v0.1.0
 	github.com/haunt98/ioe-go v0.2.0
-	github.com/haunt98/xdg v0.1.0
 	github.com/kevinburke/ssh_config v1.1.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect

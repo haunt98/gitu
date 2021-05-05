@@ -9,8 +9,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-
-	"github.com/haunt98/xdg"
 )
 
 const (
@@ -30,8 +28,12 @@ type User struct {
 
 // LoadConfig config from file, return empty if file not found
 func LoadConfig(appName string) (Config, error) {
-	path := getConfigFilePath(appName)
-	f, err := os.Open(path)
+	_, filePath, err := getConfigPath(appName)
+	if err != nil {
+		return Config{}, err
+	}
+
+	f, err := os.Open(filePath)
 	if err != nil {
 		// https://github.com/golang/go/blob/3e1e13ce6d1271f49f3d8ee359689145a6995bad/src/os/error.go#L90-L91
 		if errors.Is(err, os.ErrNotExist) {
@@ -40,13 +42,13 @@ func LoadConfig(appName string) (Config, error) {
 			}, nil
 		}
 
-		return Config{}, fmt.Errorf("failed to open %s: %w", path, err)
+		return Config{}, fmt.Errorf("failed to open %s: %w", filePath, err)
 	}
 	defer f.Close()
 
 	bytes, err := io.ReadAll(f)
 	if err != nil {
-		return Config{}, fmt.Errorf("failed to read %s: %w", path, err)
+		return Config{}, fmt.Errorf("failed to read %s: %w", filePath, err)
 	}
 
 	var result Config
@@ -63,8 +65,12 @@ func LoadConfig(appName string) (Config, error) {
 
 // SaveConfig config to file
 func SaveConfig(appName string, c *Config) error {
+	dirPath, filePath, err := getConfigPath(appName)
+	if err != nil {
+		return fmt.Errorf("failed to get config path: %w", err)
+	}
+
 	// Make sure dir is exist
-	dirPath := getConfigDirPath(appName)
 	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to mkdir %s: %w", dirPath, err)
 	}
@@ -74,7 +80,6 @@ func SaveConfig(appName string, c *Config) error {
 		return fmt.Errorf("failed to marshall: %w", err)
 	}
 
-	filePath := getConfigFilePath(appName)
 	if err := os.WriteFile(filePath, bytes, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to write file: %s: %w", filePath, err)
 	}
@@ -112,10 +117,13 @@ func (c *Config) DeleteAll() {
 	c.Users = make(map[string]User)
 }
 
-func getConfigFilePath(appName string) string {
-	return filepath.Join(xdg.GetConfigHome(), appName, configFile)
-}
+func getConfigPath(appName string) (dirPath, filePath string, err error) {
+	cfgDir, err := os.UserConfigDir()
+	if err != nil {
+		return "", "", fmt.Errorf("failed to get user config dir: %w", err)
+	}
 
-func getConfigDirPath(appName string) string {
-	return filepath.Join(xdg.GetConfigHome(), appName)
+	dirPath = filepath.Join(cfgDir, appName)
+	filePath = filepath.Join(cfgDir, appName, configFile)
+	return
 }
