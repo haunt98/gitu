@@ -1,4 +1,6 @@
-// Config stores at $XDG_CONFIG_HOME/gitu/config.json
+// Config location
+// Unix: $XDG_CONFIG_HOME/gitu/config.json
+// Windows: %LocalAppData%\gitu\config.json
 
 package config
 
